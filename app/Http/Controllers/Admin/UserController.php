@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Services\UserService;
 use App\Http\Controllers\Controller;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -106,6 +107,9 @@ class UserController extends Controller
     {
         try {
             $user = $this->service->getUser($id);
+            if (empty($user)) {
+                return redirect()->route('user.index')->withErrors('Usuário não encontrado');
+            }
             return view('admin.user.user-edit', compact('user'));
         } catch (Exception $e) {
             Log::critical('Falha ao acessar a edição de usuário: ' . $e->getMessage());
@@ -145,6 +149,14 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            if (Auth::user()->user_type != 'admin') {
+                abort(403, 'Operação não autorizada');
+            }
+            $this->service->deleteUser($id);
+            return response()->json(['status' => 1], 200);
+        } catch (Exception $e) {
+            Log::warning('Falha ao deletar usuário: ' . $e->getMessage());
+        }
     }
 }

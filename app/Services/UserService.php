@@ -17,7 +17,7 @@ class UserService
      *
      * @return Collection
      */
-    public function getUsers(): LengthAwarePaginator
+    public function getUsers()
     {
         try {
             $users = User::paginate(10);
@@ -35,7 +35,7 @@ class UserService
      * @param integer $id
      * @return User
      */
-    public function getUser(int $id): User
+    public function getUser(int $id)
     {
         try {
             $user = User::where('id', $id)->first();
@@ -91,6 +91,23 @@ class UserService
             Log::critical('Falha em updateUser: ' . $q->getMessage());
         } catch (Exception $e) {
             Log::critical('Falha em updateUser: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Deleta o usuário
+     *
+     * @param integer $userId
+     * @return void
+     */
+    public function deleteUser(int $userId): void
+    {
+        try {
+            User::destroy($userId);
+        } catch (QueryException $q) {
+            Log::critical('Falha em deleteUser: ' . $q->getMessage());
+        } catch (Exception $e) {
+            Log::critical('Falha em deleteUser: ' . $e->getMessage());
         }
     }
 }
