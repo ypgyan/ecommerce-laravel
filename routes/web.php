@@ -27,4 +27,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () use ($
      * User routes
     */
     Route::resource('/user', 'Admin\UserController');
+
+    /**
+     * Company routes
+    */
+    Route::resource('/company', 'Admin\CompanyController');
 });
