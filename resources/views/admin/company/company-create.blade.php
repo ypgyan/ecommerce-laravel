@@ -24,6 +24,11 @@
         </div>
 
         <div class="form-group">
+            <label for="email">Email*</label>
+            <input type="email" name="email" id="email" value="{{ old('email') }}" class="form-control" placeholder="comercial@coca.com" required>
+        </div>
+
+        <div class="form-group">
           <label for="description">Descrição da Empresa</label>
           <textarea class="form-control" name="description" id="description" rows="6"></textarea>
         </div>
@@ -41,6 +46,6 @@
             <option value="servico" {{ old('company_type') == 'servico' ? 'selected' : ''  }}> Serviços </option>
         </select>
         </div>
-        <button type="submit" class="btn btn-primary float-right">Submit</button>
+        <button type="submit" class="btn btn-primary float-right">Salvar</button>
     </form>
 @endsection

@@ -7,7 +7,7 @@
         <div class="form-group header">
             <h2>{{ $company->name }}</h2>
         </div>
-
+        @include('admin.message')
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -29,9 +29,15 @@
         </div>
 
         <div class="form-group">
+            <label for="email">Email*</label>
+            <input type="label" readonly name="email" id="email" value="{{ $company->email }}" class="form-control" placeholder="83089218000191">
+            <small id="helpId" class="text-muted">Para troca do Email é necessário entrar em contato com o administrador.</small>
+        </div>
+
+        <div class="form-group">
             <label for="cnpj">CNPJ*</label>
             <input type="label" readonly name="cnpj" id="cnpj" value="{{ $company->cnpj }}" class="form-control" placeholder="83089218000191">
-            <small id="helpId" class="text-muted">Para troca de CNPJ necessário contato com o administrador.</small>
+            <small id="helpId" class="text-muted">Para troca de CNPJ  entrar em contato com o administrador.</small>
         </div>
 
         <div class="form-group">

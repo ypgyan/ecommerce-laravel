@@ -74,6 +74,7 @@ class CompanyController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|min:3',
+            'email' => 'required|unique:companies',
             'cnpj' => 'required|unique:companies|min:14|max:14',
             'description' => 'required',
             'company_type' => 'required'
@@ -81,7 +82,7 @@ class CompanyController extends Controller
 
         try {
             $company = $this->service->insertCompany($validatedData);
-            return redirect()->route('company.edit', ['id' => $company->id]);
+            return redirect()->route('company.edit', [$company->id])->withSuccess('Empresa criada com sucesso');
         } catch (Exception $e) {
             Log::critical('Falha na criação de empresa: ' . $e->getMessage());
             return redirect()->route('home')->withErrors("Algo deu errado =(");
@@ -127,17 +128,18 @@ class CompanyController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|min:3',
-            'cnpj' => 'required|unique:companies|min:14|max:14',
+            'email' => 'required|string',
+            'cnpj' => 'required|min:14|max:14',
             'description' => 'required',
             'company_type' => 'required'
         ]);
 
         try {
             $this->service->updateCompany($validatedData, $id);
-            return redirect()->route('company.edit', [$id]);
+            return redirect()->route('company.edit', [$id])->withSuccess('Empresa atualziada com sucesso');
         } catch (Exception $e) {
             Log::critical('Falha ao atualizar empresa: ' . $e->getMessage());
-            return redirect()->route('home')->withErrors("Algo deu errado =(");//throw $th;
+            return redirect()->route('home')->withErrors("Algo deu errado =(");
         }
     }
 
@@ -150,5 +152,21 @@ class CompanyController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Grid com todas as Empresas cadastradas
+     *
+     * @return void
+     */
+    public function listCompanies()
+    {
+        try {
+            $companies = $this->service->getCompanies();
+            return view('admin.company.company-grid', compact('companies'));
+        } catch (Exception $e) {
+            Log::critical('Falha ao atualizar empresa: ' . $e->getMessage());
+            return redirect()->route('home')->withErrors("Algo deu errado =(");
+        }
     }
 }

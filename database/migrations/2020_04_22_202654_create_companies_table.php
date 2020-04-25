@@ -17,6 +17,7 @@ class CreateCompaniesTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->string('name');
+            $table->string('email');
             $table->string('cnpj');
             $table->text('description')->nullable();
             $table->enum('company_type', ['varejo', 'servico']);

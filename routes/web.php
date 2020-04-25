@@ -32,4 +32,5 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () use ($
      * Company routes
     */
     Route::resource('/company', 'Admin\CompanyController');
+    Route::get('/companies', 'Admin\CompanyController@listCompanies')->name('companies');
 });

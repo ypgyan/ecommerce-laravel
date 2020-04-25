@@ -13,6 +13,23 @@ use Illuminate\Support\Collection;
 class CompanyService
 {
     /**
+     * Retorna todos as empresas
+     *
+     * @return Collection
+     */
+    public function getCompanies()
+    {
+        try {
+            $companies = Company::paginate(10);
+            return $companies;
+        } catch (QueryException $q) {
+            Log::critical('Falha em getCompanies: ' . $q->getMessage());
+        } catch (Exception $e) {
+            Log::critical('Falha em getCompanies: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Retorna a empresa pelo ID
      *
      * @param integer $id
@@ -60,6 +77,7 @@ class CompanyService
             $company = new Company();
             $company->user_id = Auth::user()->id;
             $company->name = $companyData['name'];
+            $company->email = $companyData['email'];
             $company->cnpj = $companyData['cnpj'];
             $company->description = $companyData['description'];
             $company->company_type = $companyData['company_type'];
@@ -83,7 +101,7 @@ class CompanyService
     public function updateCompany(Array $companyData, int $id): void
     {
         try {
-            $user = Company::where('id', $id)->first();
+            $company = Company::where('id', $id)->first();
             $company->name = $companyData['name'];
             $company->description = $companyData['description'];
             $company->company_type = $companyData['company_type'];
