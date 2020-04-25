@@ -87,7 +87,7 @@ class ProductService
     public function deleteProduct(string $productId): void
     {
         try {
-            User::destroy($productId);
+            Product::destroy($productId);
         } catch (QueryException $q) {
             Log::critical('Falha em deleteProduct: ' . $q->getMessage());
         } catch (Exception $e) {

@@ -23,12 +23,18 @@ $( "#removeUser" ).click(function() {
             success: function(result) {
                 if (result.status) {
                     Swal.fire(
-                        'Deleted!',
-                        'Your file has been deleted.',
+                        'Deletado!',
+                        'Produto deletado com sucesso.',
                         'success'
                     ).then(() => {
                         window.location.href = '/admin/user';
                     })
+                } else {
+                    Swal.fire(
+                        'Falha ao deletar',
+                        'Tente novamente mais tarde.',
+                        'error'
+                    )
                 }
             }
         });
