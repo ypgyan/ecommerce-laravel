@@ -40449,6 +40449,8 @@ window.$ = window.jQuery = jquery__WEBPACK_IMPORTED_MODULE_0___default.a;
 
 __webpack_require__(/*! ./user */ "./resources/js/user.js");
 
+__webpack_require__(/*! ./product */ "./resources/js/product.js");
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":
@@ -40493,6 +40495,52 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/product.js":
+/*!*********************************!*\
+  !*** ./resources/js/product.js ***!
+  \*********************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_0__);
+
+$("#removeButton").click(function () {
+  var button = document.getElementById("removeButton");
+  var product = button.getAttribute('data-product-id');
+  var token = $("meta[name='csrf-token']").attr("content");
+  sweetalert2__WEBPACK_IMPORTED_MODULE_0___default.a.fire({
+    title: 'Tem certeza?',
+    text: "Essa ação não poder ser desfeita!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sim, delete!'
+  }).then(function (result) {
+    $.ajax({
+      url: '/admin/product/' + product,
+      type: 'DELETE',
+      data: {
+        "_token": token
+      },
+      success: function success(result) {
+        if (result.status) {
+          sweetalert2__WEBPACK_IMPORTED_MODULE_0___default.a.fire('Deletado!', 'Produto deletado com sucesso.', 'success').then(function () {
+            window.location.href = '/admin/product';
+          });
+        } else {
+          sweetalert2__WEBPACK_IMPORTED_MODULE_0___default.a.fire('Falha ao deletar', 'Tente novamente mais tarde.', 'error');
+        }
+      }
+    });
+  });
+});
 
 /***/ }),
 

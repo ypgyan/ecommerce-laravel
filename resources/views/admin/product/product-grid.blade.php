@@ -5,37 +5,37 @@
         @include('admin.message')
         <div class="card">
             <div class="card-header">
-                <h2>Users</h2>
+                <h2>Produtos</h2>
             </div>
             <div class="card-body">
                 <div class="card-title">
-                    <a href="{{ route('user.create') }}" class="btn btn-success card-text fa fa-plus"> Add User</a>
+                    <a href="{{ route('product.create') }}" class="btn btn-success card-text fa fa-plus"> Add Produto</a>
                 </div>
                 <table class="table">
                     <thead class="thead-dark">
                       <tr>
-                        <th scope="col">#</th>
+                        <th scope="col">ID</th>
                         <th scope="col">Name</th>
-                        <th scope="col">CPF</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Type</th>
-                        <th scope="col"></th>
+                        <th scope="col">Quantidade</th>
+                        <th scope="col">Valor</th>
+                        <th scope="col">Estoque</th>
+                        <th scope="col">#</th>
                       </tr>
                     </thead>
                     <tbody>
-                      @foreach ($users as $user)
+                      @foreach ($products as $user)
                         <tr>
                           <td>{{ $user->id }}</td>
                           <td>{{ $user->name }}</td>
-                          <td>{{ $user->cpf }}</td>
-                          <td>{{ $user->email }}</td>
-                          <td>{{ strtoupper($user->user_type) }}</td>
+                          <td>{{ $user->quantity }}</td>
+                          <td>{{ $user->price }}</td>
+                          <td>{{ $user->status }}</td>
                           <td>
-                              <a href="{{ route('user.edit', [$user->id]) }}" class="btn btn-light">Edit</a>
+                              <a href="{{ route('product.edit', [$user->id]) }}" class="btn btn-light">Visualizar</a>
                           </td>
                         </tr>
                         @endforeach
-                        {{ $users->links() }}
+                        {{ $products->links() }}
                     </tbody>
                 </table>
             </div>

@@ -43,6 +43,7 @@
                         <!-- Left Side Of Navbar -->
                         <ul class="navbar-nav mr-auto">
                             <a class="nav-link" href="{{ route('company.index') }}"> Empresa </a>
+                            <a class="nav-link" href="{{ route('product.index') }}"> Produtos </a>
                         </ul>
                     @endif
 

@@ -33,4 +33,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () use ($
     */
     Route::resource('/company', 'Admin\CompanyController');
     Route::get('/companies', 'Admin\CompanyController@listCompanies')->name('companies');
+
+    /**
+     * Product routes
+    */
+    Route::resource('/product', 'Admin\ProductController');
 });

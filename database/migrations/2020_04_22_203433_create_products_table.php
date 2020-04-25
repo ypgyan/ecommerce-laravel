@@ -21,7 +21,7 @@ class CreateProductsTable extends Migration
             $table->integer('quantity');
             $table->decimal('price',8,2);
             $table->enum('status', ['in_stock', 'out_of_stock', 'running_low']);
-            $table->string('image');
+            $table->string('image')->default('product.jpg');
             $table->timestamps();
             $table->softDeletes();
         });

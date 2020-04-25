@@ -136,7 +136,7 @@ class CompanyController extends Controller
 
         try {
             $this->service->updateCompany($validatedData, $id);
-            return redirect()->route('company.edit', [$id])->withSuccess('Empresa atualziada com sucesso');
+            return redirect()->route('company.edit', [$id])->withSuccess('Empresa atualizada com sucesso');
         } catch (Exception $e) {
             Log::critical('Falha ao atualizar empresa: ' . $e->getMessage());
             return redirect()->route('home')->withErrors("Algo deu errado =(");
