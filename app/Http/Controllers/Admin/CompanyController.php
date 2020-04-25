@@ -37,13 +37,14 @@ class CompanyController extends Controller
     public function index()
     {
         try {
-            if($this->service->userHasCompany(Auth::user()->id)) {
-                return redirect()->route('company.edit');
+            $company = $this->service->getUserCompany(Auth::user()->id);
+            if(!empty($company)) {
+                return redirect()->route('company.edit', [$company->id]);
             }else{
                 return redirect()->route('company.create');
             }
         } catch (Exception $e) {
-            Log::critical('Falha ao acessar user index: ' . $e->getMessage());
+            Log::critical('Falha ao acessar company index: ' . $e->getMessage());
             return redirect()->back()->withErrors("Algo deu errado =(");
         }
     }
@@ -82,7 +83,7 @@ class CompanyController extends Controller
             $company = $this->service->insertCompany($validatedData);
             return redirect()->route('company.edit', ['id' => $company->id]);
         } catch (Exception $e) {
-            Log::critical('Falha ao acessar a tela de criação de empresa: ' . $e->getMessage());
+            Log::critical('Falha na criação de empresa: ' . $e->getMessage());
             return redirect()->route('home')->withErrors("Algo deu errado =(");
         }
     }
@@ -110,7 +111,7 @@ class CompanyController extends Controller
             $company = $this->service->getCompany($id);
             return view('admin.company.company-edit', compact('company'));
         } catch (Exception $e) {
-            Log::critical('Falha ao acessar a tela de criação de empresa: ' . $e->getMessage());
+            Log::critical('Falha ao acessar a tela de edição de empresa: ' . $e->getMessage());
             return redirect()->route('home')->withErrors("Algo deu errado =(");
         }
     }
@@ -124,7 +125,20 @@ class CompanyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|string|min:3',
+            'cnpj' => 'required|unique:companies|min:14|max:14',
+            'description' => 'required',
+            'company_type' => 'required'
+        ]);
+
+        try {
+            $this->service->updateCompany($validatedData, $id);
+            return redirect()->route('company.edit', [$id]);
+        } catch (Exception $e) {
+            Log::critical('Falha ao atualizar empresa: ' . $e->getMessage());
+            return redirect()->route('home')->withErrors("Algo deu errado =(");//throw $th;
+        }
     }
 
     /**

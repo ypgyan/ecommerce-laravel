@@ -36,19 +36,15 @@ class CompanyService
      * @param integer $userId
      * @return boolean
      */
-    public function userHasCompany(int $userId)
+    public function getUserCompany(int $userId)
     {
         try {
-            $company = Company::where('id', $userId)->first();
-            if (empty($company)) {
-                return false;
-            } else {
-                return true;
-            }
+            $company = Company::where('user_id', $userId)->first();
+            return $company;
         } catch (QueryException $q) {
-            Log::critical('Falha em userHasCompany: ' . $q->getMessage());
+            Log::critical('Falha em getUserCompany: ' . $q->getMessage());
         } catch (Exception $e) {
-            Log::critical('Falha em userHasCompany: ' . $e->getMessage());
+            Log::critical('Falha em getUserCompany: ' . $e->getMessage());
         }
     }
 
@@ -84,19 +80,19 @@ class CompanyService
      * @param integer $id
      * @return void
      */
-    public function updateCompany(Array $userData, int $id): void
+    public function updateCompany(Array $companyData, int $id): void
     {
         try {
-            $user = User::where('id', $id)->first();
-            $user->name = $userData['user_name'];
-            $user->cpf = $userData['cpf'];
-            $user->user_type = $userData['user_type'];
+            $user = Company::where('id', $id)->first();
+            $company->name = $companyData['name'];
+            $company->description = $companyData['description'];
+            $company->company_type = $companyData['company_type'];
 
             $user->save();
         } catch (QueryException $q) {
-            Log::critical('Falha em updateUser: ' . $q->getMessage());
+            Log::critical('Falha em updateCompany: ' . $q->getMessage());
         } catch (Exception $e) {
-            Log::critical('Falha em updateUser: ' . $e->getMessage());
+            Log::critical('Falha em updateCompany: ' . $e->getMessage());
         }
     }
 

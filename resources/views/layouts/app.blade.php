@@ -34,8 +34,8 @@
                     @if (Auth::user() && Auth::user()->user_type == 'admin')
                         <!-- Left Side Of Navbar -->
                         <ul class="navbar-nav mr-auto">
-                            <a class="nav-link" href="{{ route('user.index') }}"> Users </a>
-                            <a class="nav-link" href="{{ route('company.index') }}"> Company </a>
+                            <a class="nav-link" href="{{ route('user.index') }}"> Usuários </a>
+                            <a class="nav-link" href="{{ route('company.index') }}"> Empresa </a>
                         </ul>
                     @endif
 
