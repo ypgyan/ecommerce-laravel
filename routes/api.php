@@ -14,6 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('register', 'Api\RegisterController@register');
+Route::post('login', 'Api\RegisterController@login');
+
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::group(['middleware' => ['auth:api']], function () use ($router) {
+
+    Route::resource('/product', 'Api\ProductController', ['as' => 'api']);
 });
