@@ -14,29 +14,31 @@ $( "#removeButton" ).click(function() {
         cancelButtonColor: '#d33',
         confirmButtonText: 'Sim, delete!'
     }).then((result) => {
-        $.ajax({
-            url: '/admin/product/' + product,
-            type: 'DELETE',
-            data: {
-                "_token": token,
-            },
-            success: function(result) {
-                if (result.status) {
-                    Swal.fire(
-                        'Deletado!',
-                        'Produto deletado com sucesso.',
-                        'success'
-                    ).then(() => {
-                        window.location.href = '/admin/product';
-                    })
-                } else {
-                    Swal.fire(
-                        'Falha ao deletar',
-                        'Tente novamente mais tarde.',
-                        'error'
-                    )
+        if (result.value) {
+            $.ajax({
+                url: '/admin/product/' + product,
+                type: 'DELETE',
+                data: {
+                    "_token": token,
+                },
+                success: function(result) {
+                    if (result.status) {
+                        Swal.fire(
+                            'Deletado!',
+                            'Produto deletado com sucesso.',
+                            'success'
+                        ).then(() => {
+                            window.location.href = '/admin/product';
+                        })
+                    } else {
+                        Swal.fire(
+                            'Falha ao deletar',
+                            'Tente novamente mais tarde.',
+                            'error'
+                        )
+                    }
                 }
-            }
-        });
+            });
+        }
     })
 });

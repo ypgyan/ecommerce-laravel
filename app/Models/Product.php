@@ -15,4 +15,13 @@ class Product extends Model
      * @var boolean
      */
     public $incrementing = false;
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'user_id', 'updated_at', 'deleted_at'
+    ];
 }

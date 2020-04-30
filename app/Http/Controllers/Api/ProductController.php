@@ -2,24 +2,49 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Api\BaseController as BaseController;
-use App\Models\Product;
-use Validator;
 use App\Http\Resources\Product as ProductResource;
+use App\Http\Controllers\Api\BaseController as BaseController;
+use App\Interfaces\ProductInterface;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Validator;
 
 class ProductController extends BaseController
 {
+
     /**
-     * Display a listing of the resource.
+     * Interface de produto
+     *
+     * @var ProductInterface
+     */
+    private $productInterface;
+
+    /**
+     * Construtor da classe
+     *
+     * @param ProductInterface $product
+     */
+    public function __construct(ProductInterface $productInterface)
+    {
+        $this->productInterface = $productInterface;
+    }
+
+    /**
+     * Retorna todos os produtos.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $products = Product::all();
+        try {
+            $products = $this->productInterface->getProducts();
 
-        return $this->sendResponse(ProductResource::collection($products), 'Products retrieved successfully.');
+            return $this->sendResponse(ProductResource::collection($products), 'Products retrieved successfully.');
+        } catch (Exception $e) {
+            Log::critical('Falha na API ao retornas os produto: ' . $e->getMessage());
+            $this->sendError('Desculpe algo deu errado', [], 500);
+        }
     }
     /**
      * Store a newly created resource in storage.
@@ -29,20 +54,27 @@ class ProductController extends BaseController
      */
     public function store(Request $request)
     {
-        $input = $request->all();
+        try {
+            $input = $request->all();
 
-        $validator = Validator::make($input, [
-            'name' => 'required',
-            'detail' => 'required'
-        ]);
+            $validator = Validator::make($input, [
+                'name' => 'required|string',
+                'price' => 'required|numeric|between:0,99999999',
+                'quantity' => 'required|between:1,99999',
+                'description' => 'required'
+            ]);
 
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());
+            if($validator->fails()){
+                return $this->sendError('Erro de validação.', $validator->errors());
+            }
+
+            $product = $this->productInterface->insertProduct($input);
+
+            return $this->sendResponse(new ProductResource($product), 'Product created successfully.');
+        } catch (Exception $e) {
+            Log::critical('Falha na API ao inserir produto: ' . $e->getMessage());
+            $this->sendError('Desculpe algo deu errado', [], 500);
         }
-
-        $product = Product::create($input);
-
-        return $this->sendResponse(new ProductResource($product), 'Product created successfully.');
     }
 
     /**
@@ -53,7 +85,7 @@ class ProductController extends BaseController
      */
     public function show($id)
     {
-        $product = Product::find($id);
+        $product = $this->productInterface->getProduct($id);
 
         if (is_null($product)) {
             return $this->sendError('Product not found.');
@@ -69,24 +101,9 @@ class ProductController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, string $id)
     {
-        $input = $request->all();
-
-        $validator = Validator::make($input, [
-            'name' => 'required',
-            'detail' => 'required'
-        ]);
-
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());
-        }
-
-        $product->name = $input['name'];
-        $product->detail = $input['detail'];
-        $product->save();
-
-        return $this->sendResponse(new ProductResource($product), 'Product updated successfully.');
+        //
     }
 
     /**
@@ -95,10 +112,15 @@ class ProductController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy(string $id)
     {
-        $product->delete();
+        try {
+            $this->productInterface->deleteProduct($id);
 
-        return $this->sendResponse([], 'Product deleted successfully.');
+            return $this->sendResponse([], 'Product deleted successfully.');
+        } catch (Exception $e) {
+            Log::critical('Falha na API ao deletar produto: ' . $e->getMessage());
+            $this->sendError('Desculpe algo deu errado', [], 500);
+        }
     }
 }

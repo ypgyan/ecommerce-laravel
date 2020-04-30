@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Product;
+use App\Interfaces\ProductInterface;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
-class ProductService
+class ProductService implements ProductInterface
 {
     /**
      * Retorna todos os produtos
@@ -53,9 +54,9 @@ class ProductService
      * Insere o produto
      *
      * @param Array $productData
-     * @return void
+     * @return Product
      */
-    public function insertProduct(Array $productData): void
+    public function insertProduct(array $productData)
     {
         try {
             $product = new Product();
@@ -68,6 +69,7 @@ class ProductService
             $product->status = $this->getProductStatus($productData['quantity']);
 
             $product->save();
+            return $product;
         } catch (QueryException $q) {
             Log::critical('Falha em insertProduct: ' . $q->getMessage());
             throw $e;
@@ -114,7 +116,7 @@ class ProductService
     }
 
     /**
-     * Verifica se o usuário é o dono do produto
+     * Verifica se o usuário logado é o dono do produto
      *
      * @param string $productId
      * @return boolean
